@@ -1,0 +1,40 @@
+You are acting as a senior full-stack engineer.
+
+Context:
+- This is a monorepo with two apps:
+  - apps/api → Node.js + Express REST API
+  - apps/web → React frontend
+- The repository already contains GitHub Copilot instruction files under `.github/instructions/`.
+- You MUST strictly follow all architecture, frontend, backend, file-storage, and testing rules defined in those instruction files.
+- Do not invent new patterns that violate the instructions.
+
+Task:
+1. Generate the complete folder structure for:
+   - apps/api
+   - apps/web
+2. Create a minimal but production-ready implementation of a ToDo application.
+
+API requirements:
+- File-based JSON storage
+- Atomic file writes
+- Input validation
+- Centralized error handling
+- Endpoints:
+  - GET /api/todos
+  - POST /api/todos
+  - PATCH /api/todos/:id
+  - DELETE /api/todos/:id
+
+Frontend requirements:
+- React functional components with hooks
+- Single API client module
+- Loading, empty, and error states
+- Ability to list, add, toggle, and delete todos
+
+Output rules:
+- Show file paths before each file’s content
+- Do not skip files
+- Do not include explanations unless necessary
+- Code must be runnable without modification
+
+If any requirement is unclear, ask clarifying questions before generating code.

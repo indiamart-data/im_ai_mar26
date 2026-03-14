@@ -1,0 +1,46 @@
+{
+  "name": "neo-oms",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "kill-ports": "powershell -Command \"@(3001,3002,3003,3004,3005,8081) | ForEach-Object { $port=$_; netstat -ano | Select-String \":$port.*LISTENING\" | ForEach-Object { ($_ -split '\\s+')[-1] } | Where-Object { $_ -match '^\\d+$' } | Sort-Object -Unique | ForEach-Object { Write-Host \\\"Killing process $_ on port $port\\\"; Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } }\"",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "fresh": "powershell -ExecutionPolicy Bypass -File ./fresh.ps1",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "test": "turbo test",
+    "test:run": "turbo test:run",
+    "test:coverage": "turbo test:coverage",
+    "test:coverage:html": "turbo test:coverage && start apps/admin/coverage/index.html",
+    "test:ui": "pnpm --filter admin test:ui",
+    "test:ui:auth": "pnpm --filter @neo-oms/auth test:ui",
+    "db:generate": "turbo db:generate",
+    "db:push": "turbo db:push",
+    "db:migrate": "turbo db:migrate",
+    "db:studio": "turbo db:studio",
+    "generate-icons": "node scripts/generate-icons.mjs",
+    "postinstall": "prisma generate --schema=./packages/database/prisma/schema.prisma"
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^0.71.0",
+    "prettier": "^3.1.1",
+    "prisma": "^6.1.0",
+    "rimraf": "^6.1.2",
+    "sharp": "^0.34.5",
+    "turbo": "^2.3.3",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@prisma/client": "^6.1.0",
+    "zod": "^4.1.13",
+    "zustand": "^5.0.8"
+  }
+}
