@@ -1,22 +1,26 @@
-const path = require('node:path');
-const os = require('node:os');
-const fs = require('node:fs/promises');
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const request = require('supertest');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const mongoose = require('mongoose');
+const { connectDB, disconnectDB } = require('../src/db/connection');
 
-const tempFile = path.join(os.tmpdir(), `todos-api-test-${process.pid}.json`);
-process.env.TODO_DATA_FILE = tempFile;
+let mongoServer;
 
 const app = require('../src/app');
 
-async function resetDataFile() {
-  await fs.mkdir(path.dirname(tempFile), { recursive: true });
-  await fs.writeFile(tempFile, JSON.stringify({ todos: [] }, null, 2));
-}
+test.before(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  await connectDB(mongoServer.getUri());
+});
 
 test.beforeEach(async () => {
-  await resetDataFile();
+  await mongoose.connection.db.dropDatabase();
+});
+
+test.after(async () => {
+  await disconnectDB();
+  await mongoServer.stop();
 });
 
 test('GET /api/todos returns empty list', async () => {

@@ -23,7 +23,7 @@ cd apps/web && npm test   # Web tests only (Vitest)
 
 Monorepo with two apps managed via npm workspaces:
 
-- **`apps/api`** — Express.js REST API. MVC-like structure: `routes/` → `controllers/` → `storage/`. Data persisted to a JSON file (`data/todos.json`, configurable via `TODO_DATA_FILE` env var). Uses atomic writes (temp file → rename) with a write queue to prevent corruption.
+- **`apps/api`** — Express.js REST API. MVC-like structure: `routes/` → `controllers/` → `storage/`. Data persisted to MongoDB via Mongoose (configurable via `MONGODB_URI` env var, default `mongodb://localhost:27017/todo-app`). Mongoose model in `src/models/todo.model.js`, DB connection in `src/db/connection.js`.
 - **`apps/web`** — React 18 + Vite SPA. Component-based with custom hooks (`useTodos`) for business logic. Single API client module at `src/api/client.js`. Uses optimistic UI updates with rollback on failure.
 
 **Key constraint:** `apps/web` must never do filesystem or direct persistence — `apps/api` is the single source of truth. The API owns ID generation, timestamps, and validation.
@@ -46,12 +46,12 @@ Monorepo with two apps managed via npm workspaces:
 
 ## Testing Patterns
 
-- **API:** supertest for HTTP tests, temporary JSON file per test (not production data), AAA pattern (Arrange → Act → Assert)
+- **API:** supertest for HTTP tests, `mongodb-memory-server` for isolated test DB, AAA pattern (Arrange → Act → Assert)
 - **Web:** @testing-library/react + Vitest with jsdom, test user interactions not implementation details
 
 ## Environment Variables
 
-- API: `PORT` (default 3001), `TODO_DATA_FILE` (default `./data/todos.json`)
+- API: `PORT` (default 3001), `MONGODB_URI` (default `mongodb://localhost:27017/todo-app`)
 - Web: `VITE_API_URL` (default `http://localhost:3001`)
 
 ## Copilot/AI Guidance

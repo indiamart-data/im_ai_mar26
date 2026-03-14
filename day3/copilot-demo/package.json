@@ -4,13 +4,16 @@
   "version": "1.0.0",
   "workspaces": [
     "apps/api",
-    "apps/web"
+    "apps/web",
+    "apps/docs"
   ],
   "scripts": {
     "dev": "concurrently \"npm:dev:api\" \"npm:dev:web\"",
     "dev:api": "npm --workspace apps/api run dev",
     "dev:web": "npm --workspace apps/web run dev",
+    "dev:docs": "npm --workspace apps/docs run start",
     "build": "npm --workspace apps/web run build",
+    "build:docs": "npm --workspace apps/docs run build",
     "test": "npm --workspace apps/api run test && npm --workspace apps/web run test"
   },
   "devDependencies": {
